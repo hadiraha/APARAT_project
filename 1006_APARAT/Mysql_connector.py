@@ -23,6 +23,19 @@ class Mysqlconnector:
         except mysql.connector.Error as err:
             print(f'Error has just taken place --> {err}')
         return config
+    
+    def get_table_already_columns(self, tablename):
+        cursor = self.conf.cursor()
+        cursor.execute(f"SHOW COLUMNS FROM {tablename}")
+        columns = [column[0] for column in cursor.fetchall()]
+        cursor.close()
+        return columns
+
+    def add_new_column(self, tablename, newcolumn):
+        cursor = self.conf.cursor()
+        query = f"ALTER TABLE {tablename} ADD {newcolumn} TEXT"
+        cursor.execute(query)
+        cursor.close()
 
     def create_table(self, tablename, data):
         cursor = self.conf.cursor()
@@ -33,6 +46,13 @@ class Mysqlconnector:
         cursor.close()
 
     def insert_value(self, tablename, data):
+        ## Before inserting values we check if there is any new keys in JSON structcure over time:
+        alredy_columns = self.get_table_already_columns(tablename)
+
+        for key in data.keys():
+            if key not in alredy_columns:
+                self.add_new_column(tablename, key)
+
         cursor = self.conf.cursor()
         placeholders = ', '.join(['%s']*len(data))
         columns = ', '.join(data.keys())
