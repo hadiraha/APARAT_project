@@ -16,9 +16,10 @@ class Mysqlconnector:
         
     def open_connection(self):    
         try:
-            config = mysql.connector.connect(host = self.DB_HOST, user = self.DB_USER, password = self.DB_PASS, database = self.DB_NAME, auth_plugin = self.DB_AUTH)
+            config = mysql.connector.connect(host = self.DB_HOST, user = self.DB_USER, password = self.DB_PASS, auth_plugin = self.DB_AUTH)
             print("connecting to mysql was successfully")
-            cursor = config.cursor()
+            cursor = config.cursor() 
+            cursor.execute(f"CREATE DATABASE IF NOT EXISTS {self.DB_NAME}")
             cursor.execute(f"USE {self.DB_NAME}")
         except mysql.connector.Error as err:
             print(f'Error has just taken place --> {err}')
@@ -66,7 +67,6 @@ class Mysqlconnector:
             self.conf.close()
             print("connection got clossed")
 
-# c = Mysqlconnector()
-# c.create_table('test1', {'name':'ali' , 'family':'alyan', 'age': '20', 'id':1})
-# c.insert_value('test1', {'name':'ali' , 'family':'alyan', 'age': '20', 'id':1})
-# c.close_connection()
+c = Mysqlconnector()
+
+c.close_connection()

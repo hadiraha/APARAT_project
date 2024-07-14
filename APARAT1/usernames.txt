@@ -297,3 +297,16 @@ https://www.aparat.com/api/fa/v1/user/user/information/username/Tafrihi_Best
 https://www.aparat.com/api/fa/v1/user/user/information/username/fars.irib.ir
 https://www.aparat.com/api/fa/v1/user/user/information/username/masaf
 https://www.aparat.com/api/fa/v1/user/user/information/username/siavashsadri
+https://www.aparat.com/api/fa/v1/user/user/information/username/ansaralhossein.ir
+https://www.aparat.com/api/fa/v1/user/user/information/username/karbalaeiha_yazd
+https://www.aparat.com/api/fa/v1/user/user/information/username/nooriehinfo
+https://www.aparat.com/api/fa/v1/user/user/information/username/pine
+https://www.aparat.com/api/fa/v1/user/user/information/username/AmirTikPlay
+https://www.aparat.com/api/fa/v1/user/user/information/username/Moalleminoo
+https://www.aparat.com/api/fa/v1/user/user/information/username/MoeinXM_Stream1
+https://www.aparat.com/api/fa/v1/user/user/information/username/Mr.Challenge999
+https://www.aparat.com/api/fa/v1/user/user/information/username/mohsenchavoshi
+https://www.aparat.com/api/fa/v1/user/user/information/username/salarmortazavi
+https://www.aparat.com/api/fa/v1/user/user/information/username/MRH4med
+https://www.aparat.com/api/fa/v1/user/user/information/username/mohammadreza_master
+https://www.aparat.com/api/fa/v1/user/user/information/username/zoomit
