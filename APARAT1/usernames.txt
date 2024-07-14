@@ -310,3 +310,5 @@ https://www.aparat.com/api/fa/v1/user/user/information/username/salarmortazavi
 https://www.aparat.com/api/fa/v1/user/user/information/username/MRH4med
 https://www.aparat.com/api/fa/v1/user/user/information/username/mohammadreza_master
 https://www.aparat.com/api/fa/v1/user/user/information/username/zoomit
+https://www.aparat.com/api/fa/v1/user/user/information/username/GoalSport
+https://www.aparat.com/api/fa/v1/user/user/information/username/fotros_ir
