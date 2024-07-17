@@ -67,6 +67,6 @@ class Mysqlconnector:
             self.conf.close()
             print("connection got clossed")
 
-c = Mysqlconnector()
+# c = Mysqlconnector()
 
-c.close_connection()
+# c.close_connection()
