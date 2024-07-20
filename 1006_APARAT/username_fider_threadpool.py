@@ -25,7 +25,7 @@ def append_data(filename, data):
         f.write(data + '\n')
         # print(f"writing {data} data")
 
-def set_to_file(dir, data):
+def set_to_file(dir, data): #for creating username file
     filename = os.path.join(dir, 'usernames.txt')
     existing_data = read_existing_data(filename)
     data_set = set(data)
@@ -40,9 +40,9 @@ def set_to_file(dir, data):
         print("Alreade there is not NEW DATA")
     return print(f"writing new data:{len(new_data)} in {filename}")
 
-class user_finder:
-    base_url = r'https://www.aparat.com/api/fa/v1/user/user/information/username/'
-    seed_url = 'https://www.aparat.com/api/fa/v1/video/video/list/tagid/1?next=1'
+class user_finder: ## It gets PROJECT NAME like "APARAT" and MAX itr
+    base_url = r'https://www.aparat.com/api/fa/v1/user/user/information/username/' ##Base URL for making APIs  to retrive profiles info
+    seed_url = 'https://www.aparat.com/api/fa/v1/video/video/list/tagid/1?next=1'  ##Seed URL for the first page in HOME
     
     def __init__(self, project_name, max_itr):
         self.project_name = project_name
@@ -55,7 +55,7 @@ class user_finder:
 
     def get_adress(self):
         url_fndr(self.seed_url, self.project_name, self.max_itr)
-        file_adress = fr'{self.project_name}' + r'\urls.txt'
+        file_adress = os.path.join(self.project_name , 'urls.txt')
         return file_adress
 
     def url_reader(self):
@@ -135,7 +135,7 @@ class user_finder:
         return sorted(username_urls)
     
     def usernames_to_file(self):
-        # print(f"is creating files by {self.username_urls} , {self.usernames}")
+        print(f"is creating files by {self.username_urls} , {self.usernames}")
         set_to_file(self.project_name, self.username_urls)
 
 # projname = 'test304threadpool'

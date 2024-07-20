@@ -12,8 +12,9 @@ from profile_parse_threadpool import ProfileFetcher
 import os
 
 PROJECT_NAME = 'APARAT1'
-MAX_ITR = 100
-USER_NAMES_URL = os.path.join(PROJECT_NAME, 'usernames.txt')
+MAX_ITR = 100 ## More than 50 will be safe
+USER_NAMES_URL = os.path.join(PROJECT_NAME, 'usernames.txt') #Making a path for storing usernames
+PAGE_ADDRS_URL = os.path.join(PROJECT_NAME, 'urls.txt')
 
 u = user_finder(PROJECT_NAME, MAX_ITR)
 u.multi_fetch()
