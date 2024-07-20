@@ -36,17 +36,20 @@ class ProfileFetcher:
         with ThreadPoolExecutor(max_workers= 10) as ex:
             futures = {ex.submit(self.fetch_data, url): url for url in self.urls}
             a = 0
+            b = 0
             for future in as_completed(futures):
                 url = futures[future]
                 try:
                     data = future.result()
                     if data:
-                        self.parse_data_to_df(data)
-                        self.pars_data_to_sql(data)
-                        print(f"Successfully fetched data from: {url}")
-                        a += 1
-                        self.counter += 1
-                        print(f"{a} ________________ {self.counter}")
+                        b += 1
+                        print(f"this is {b}th")
+                        # self.parse_data_to_df(data)
+                        if self.pars_data_to_sql(data):
+                            print(f"Successfully fetched data from: {url}")
+                            a += 1
+                            self.counter += 1
+                            print(f"{a} ________________ {self.counter}")
                 except Exception as e:
                     print(f"Error: {e} From Fetching {url}")
         return self.show_counter()
@@ -84,11 +87,11 @@ class ProfileFetcher:
             tablename = 'fetched'
             c = Mysqlconnector()
             c.create_table(tablename, dic_profile)
-            c.insert_value(tablename, dic_profile)
+            state = c.insert_value(tablename, dic_profile)
             c.close_connection()
-
-        pass
-
+            return state
+        return False
+            
 
     def parse_data_to_df(self, data):
         if 'data' in data and 'attributes' in data['data']:

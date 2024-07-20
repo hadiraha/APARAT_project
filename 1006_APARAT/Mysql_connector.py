@@ -4,6 +4,7 @@ import os
 
 
 class Mysqlconnector:
+    counter = 0
     load_dotenv()
     DB_HOST = os.getenv('host')
     DB_USER = os.getenv('user')
@@ -58,9 +59,15 @@ class Mysqlconnector:
         placeholders = ', '.join(['%s']*len(data))
         columns = ', '.join(data.keys())
         insert_values_query = f"INSERT INTO {tablename} ({columns}) VALUES ({placeholders})"
-        cursor.execute(insert_values_query, list(data.values()))
-        self.conf.commit()
-        cursor.close()
+        try:
+            cursor.execute(insert_values_query, list(data.values()))
+            self.conf.commit()
+            return True
+        except mysql.connector.IntegrityError as e:
+            print(f"Duplicate for {data['id']}: {e}")
+            return False
+        finally:
+            cursor.close()
 
     def close_connection(self):
         if self.conf.is_connected():
