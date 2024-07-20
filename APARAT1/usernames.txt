@@ -394,3 +394,4 @@ https://www.aparat.com/api/fa/v1/user/user/information/username/dr.gholamreza.de
 https://www.aparat.com/api/fa/v1/user/user/information/username/mayameynews
 https://www.aparat.com/api/fa/v1/user/user/information/username/fars_tv
 https://www.aparat.com/api/fa/v1/user/user/information/username/Fotballvaramin
+https://www.aparat.com/api/fa/v1/user/user/information/username/travelgram
