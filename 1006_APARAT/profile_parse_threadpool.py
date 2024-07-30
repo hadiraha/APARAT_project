@@ -11,14 +11,14 @@ from Mysql_connector import Mysqlconnector
 # from username_fider import user_finder
 
 
-class ProfileFetcher:
+class ProfileFetcher: #Responsible for get user data and save it on sql
     counter = 0
     def __init__(self, file):
         self.file = file
         self.urls = self.read_file()
         self.df = pd.DataFrame()
 
-    def read_file(self):
+    def read_file(self): #
         urls = set()
         try:
             with open(self.file, 'r') as f:

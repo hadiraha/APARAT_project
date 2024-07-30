@@ -10,7 +10,7 @@ from Requests import valid_url
 # url_fndr(url, projname, max_iter)
 # urls_file = fr'{projname}' + r'\urls.txt'
 
-def read_existing_data(filename):
+def read_existing_data(filename): 
     existing_data = set()
     try:
         with open(filename, 'r') as f:
@@ -40,6 +40,9 @@ def set_to_file(dir, data): #for creating username file
         print("Alreade there is not NEW DATA")
     return print(f"writing new data:{len(new_data)} in {filename}")
 
+#these three functions make sure we are not requsting repetitive uses and saving new data
+###______________________________________________________________________________________________________________
+
 class user_finder: ## It gets PROJECT NAME like "APARAT" and MAX itr
     base_url = r'https://www.aparat.com/api/fa/v1/user/user/information/username/' ##Base URL for making APIs  to retrive profiles info
     seed_url = 'https://www.aparat.com/api/fa/v1/video/video/list/tagid/1?next=1'  ##Seed URL for the first page in HOME
@@ -54,14 +57,14 @@ class user_finder: ## It gets PROJECT NAME like "APARAT" and MAX itr
         self.username_urls = set()
 
     def get_adress(self):
-        url_fndr(self.seed_url, self.project_name, self.max_itr)
-        file_adress = os.path.join(self.project_name , 'urls.txt')
-        return file_adress
+        url_fndr(self.seed_url, self.project_name, self.max_itr) #Calling the Request.py to crawl on seed page to get the whole page!!!
+        file_adress = os.path.join(self.project_name , 'urls.txt') #Adressing the file contain all urls to start and request them
+        return file_adress #Return the url.txt file address to use it then
 
     def url_reader(self):
-        urls = set()
+        urls = set() #put them in a set to avoid repetitive data
         try:
-            with open(self.file_adress , 'r') as f:
+            with open(self.file_adress , 'r') as f: # reading urls from urls.txt
                 for line in f:
                     url = line.strip()
                     if url:
@@ -72,9 +75,9 @@ class user_finder: ## It gets PROJECT NAME like "APARAT" and MAX itr
             print(f"this error: {e} happened")
         return sorted(urls)
 
-    def multi_fetch(self):
+    def multi_fetch(self): #make requsts to urls with at least ten worker to make it quicker ## it will invoke two functions 1-fetcher 2-parser
         with ThreadPoolExecutor(max_workers=10) as ex:
-            futures = {ex.submit(self.fetch_data, url): url for url in self.urls}
+            futures = {ex.submit(self.fetch_data, url): url for url in self.urls} 
             for future in as_completed(futures):
                 url = futures[future]
                 try:
@@ -97,7 +100,7 @@ class user_finder: ## It gets PROJECT NAME like "APARAT" and MAX itr
             except requests.RequestException as e:
                 print(f"ERROR raised: {e}")
 
-    def fetch_data(self, url):
+    def fetch_data(self, url): #making requsts to the urls and get data to pass to parser
         try:
             print(f"Fetching data from: {url}")
             r = requests.get(valid_url(url))
@@ -113,7 +116,7 @@ class user_finder: ## It gets PROJECT NAME like "APARAT" and MAX itr
 
 
 
-    def parse_data(self, data):
+    def parse_data(self, data): # parsing json to get usernames in each url in urls.txt
         if 'included' in data:
             list = data['included']
             l = len(list)
@@ -123,10 +126,10 @@ class user_finder: ## It gets PROJECT NAME like "APARAT" and MAX itr
                 else:
                     break
                 
-    def get_username(self):
+    def get_username(self): #sorting usernames
         return sorted(self.usernames)
     
-    def get_username_url(self):
+    def get_username_url(self): #making urls for each user
         username_urls = set()
         for user in self.usernames:
             u = self.base_url + user
@@ -134,7 +137,7 @@ class user_finder: ## It gets PROJECT NAME like "APARAT" and MAX itr
             # print(f"{u} has been made")
         return sorted(username_urls)
     
-    def usernames_to_file(self):
+    def usernames_to_file(self): #storing them to file to requste them after and fetch the users data
         print(f"is creating files by {self.username_urls} , {self.usernames}")
         set_to_file(self.project_name, self.username_urls)
 
