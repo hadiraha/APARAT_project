@@ -1,14 +1,8 @@
 import requests
 import os
 from concurrent.futures import ThreadPoolExecutor, as_completed
-# from pathlib import Path
 from Requests import url_fndr
 from Requests import valid_url
-# url = 'https://www.aparat.com/api/fa/v1/video/video/list/tagid/1?next=1'
-# projname = 'test302'
-# max_iter = 5
-# url_fndr(url, projname, max_iter)
-# urls_file = fr'{projname}' + r'\urls.txt'
 
 def read_existing_data(filename): 
     existing_data = set()
@@ -132,18 +126,15 @@ class user_finder: ## It gets PROJECT NAME like "APARAT" and MAX itr
     def get_username_url(self): #making urls for each user
         username_urls = set()
         for user in self.usernames:
-            u = self.base_url + user
-            self.username_urls.add(u)
+            if user:
+                u = self.base_url + user
+                self.username_urls.add(u)
+            else:
+                print("NONE TYPE ERROR")
             # print(f"{u} has been made")
         return sorted(username_urls)
     
     def usernames_to_file(self): #storing them to file to requste them after and fetch the users data
         print(f"is creating files by {self.username_urls} , {self.usernames}")
         set_to_file(self.project_name, self.username_urls)
-
-# projname = 'test304threadpool'
-# u = user_finder(projname, 100)
-# u.multi_fetch()
-# u.get_username_url()
-# u.usernames_to_file()
 
