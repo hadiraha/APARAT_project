@@ -1,6 +1,4 @@
 import requests
-# import pprint
-# import json
 import os
 
 def valid_url(url):
@@ -27,10 +25,6 @@ def url_fndr(base_url, project_name, max_req):
         pass
     make_file(directory, base_url)
     
-    # r = requests.get(valid_url(base_url))
-    # data = r.json()
-    # d = data['links']['next']
-
     while iterations < max_iterations: #just a simple controller when it's supposed to not crawl whol page *** choosing more than 40 would be enough to ensure it's crwaling whole page
         try:
             r = requests.get(valid_url(base_url)) # requst to start point (seed)
@@ -51,5 +45,3 @@ def url_fndr(base_url, project_name, max_req):
              print(f"An error occurred: {e}")
              break
 
-# url = 'https://www.aparat.com/api/fa/v1/video/video/list/tagid/1?next=1'
-# url_fndr(url, 'test300',200)

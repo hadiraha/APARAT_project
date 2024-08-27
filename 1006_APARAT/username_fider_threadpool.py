@@ -34,7 +34,7 @@ def set_to_file(dir, data): #for creating username file
         print("Alreade there is not NEW DATA")
     return print(f"writing new data:{len(new_data)} in {filename}")
 
-#these three functions make sure we are not requsting repetitive uses and saving new data
+#these three functions (up there) make sure we are not requsting repetitive uses and saving new data
 ###______________________________________________________________________________________________________________
 
 class user_finder: ## It gets PROJECT NAME like "APARAT" and MAX itr

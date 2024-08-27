@@ -1,15 +1,8 @@
-# import threading
 from concurrent.futures import ThreadPoolExecutor, as_completed
 import requests
-# import pprint
-# import json
-# import os
 from Requests import valid_url
 import pandas as pd
 from Mysql_connector import Mysqlconnector
-# from username_fider import url_fndr
-# from username_fider import user_finder
-
 
 class ProfileFetcher: #Responsible for get user data and save it on sql
     counter = 0
@@ -101,11 +94,3 @@ class ProfileFetcher: #Responsible for get user data and save it on sql
 
     def show_counter(self):
         print(f"{self.counter} is the total number of affected rows in DB")
-
-# file_path = r'test304threadpool\usernames.txt'
-# p1 = ProfileFetcher(file_path)
-# p1.multi_fetch()
-
-# df = p1.df
-
-# df.to_csv('profiles6.csv', index=False)
