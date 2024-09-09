@@ -39,9 +39,9 @@ class Mysqlconnector:
         cursor.execute(query)
         cursor.close()
 
-    def create_table(self, tablename, data):
+    def create_table(self, tablename, data, auto_increment_id = False):
         cursor = self.conf.cursor()
-        columns = ', '.join([f"{key} INT PRIMARY KEY" if key == 'id' else f"{key} TEXT" for key in data.keys()])
+        columns = ', '.join([f"{key} INT PRIMARY KEY AUTO_INCREMENT" if key == 'id' and auto_increment_id else f"{key} INT PRIMARY KEY" if key == 'id' else f"{key} TEXT" for key in data.keys()])
         create_table_query = f"CREATE TABLE IF NOT EXISTS {tablename} ({columns});"
         cursor.execute(create_table_query)
         self.conf.commit()

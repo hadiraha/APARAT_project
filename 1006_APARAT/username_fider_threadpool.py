@@ -3,6 +3,7 @@ import os
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from Requests import url_fndr
 from Requests import valid_url
+from Mysql_connector import Mysqlconnector
 
 def read_existing_data(filename): 
     existing_data = set()
@@ -31,10 +32,36 @@ def set_to_file(dir, data): #for creating username file
             with open(filename, 'a') as f:
                 f.write(d +'\n')
     else:
-        print("Alreade there is not NEW DATA")
+        print("Already there is not NEW DATA")
     return print(f"writing new data:{len(new_data)} in {filename}")
 
-#these three functions (up there) make sure we are not requsting repetitive uses and saving new data
+def get_existing_data_from_sql(connection, tablename):
+    query = f"SELECT username FROM {tablename}"
+    cursor = connection.conf.cursor()
+    cursor.execute(query)
+    existing = {row[0] for row in cursor.fetchall()}
+    cursor.close()
+    return existing
+    
+def add_to_sql(tablename, data):
+    c = Mysqlconnector()
+    # If it doesnt exist, it creats. this certeria will be cheked in Mysql_connector.py by defenition of creat_table() function.
+    c.create_table(tablename, data[0], auto_increment_id= True)
+
+    existing_data = get_existing_data_from_sql(c, tablename)
+    new_data = [user for user in data if user['username'] not in existing_data]
+    # We should convert the list of dictsdata = [
+    # {'id': None, 'username': 'user1', 'username_url': 'url1', 'last_seen': 0},
+    # {'id': None, 'username': 'user2', 'username_url': 'url2', 'last_seen': 0},
+    # {'id': None, 'username': 'user3', 'username_url': 'url3', 'last_seen': 0}
+    # ] to a dict before using insert value function
+    for dict in new_data:
+        c.insert_value(tablename, dict)
+
+    c.close_connection()
+    print(f"{len(new_data)} insrted into {tablename}")
+
+#these three functions (up there) make sure we are not requsting repetitive users and saving new data
 ###______________________________________________________________________________________________________________
 
 class user_finder: ## It gets PROJECT NAME like "APARAT" and MAX itr
@@ -49,16 +76,17 @@ class user_finder: ## It gets PROJECT NAME like "APARAT" and MAX itr
         self.urls = self.url_reader()
         self.username_urls = self.get_username_url()
         self.username_urls = set()
+        self.users_data = []
 
     def get_adress(self):
-        url_fndr(self.seed_url, self.project_name, self.max_itr) #Calling the Request.py to crawl on seed page to get the whole page!!!
-        file_adress = os.path.join(self.project_name , 'urls.txt') #Adressing the file contain all urls to start and request them
-        return file_adress #Return the url.txt file address to use it then
+        url_fndr(self.seed_url, self.project_name, self.max_itr) # Calling the Request.py to crawl on seed page to get the whole page!!!
+        file_adress = os.path.join(self.project_name , 'urls.txt') # Adressing the file containing all urls to start and request them
+        return file_adress # Return the url.txt file address to use it then
 
     def url_reader(self):
-        urls = set() #put them in a set to avoid repetitive data
+        urls = set() # Put them in a set to avoid repetitive data
         try:
-            with open(self.file_adress , 'r') as f: # reading urls from urls.txt
+            with open(self.file_adress , 'r') as f: # Reading urls from urls.txt
                 for line in f:
                     url = line.strip()
                     if url:
@@ -123,18 +151,36 @@ class user_finder: ## It gets PROJECT NAME like "APARAT" and MAX itr
     def get_username(self): #sorting usernames
         return sorted(self.usernames)
     
-    def get_username_url(self): #making urls for each user
+    def get_username_url(self): # making urls for each user
         username_urls = set()
+        users_data = []
+
         for user in self.usernames:
             if user:
                 u = self.base_url + user
-                self.username_urls.add(u)
+                username_urls.add(u)
+                # Creatind dict of usernames and coresponding user urls
+                user_data = {
+                    'id': None,
+                    'username': user,
+                    'username_url': u,
+                    'last_seen': 0
+                }
+                users_data.append(user_data)
             else:
                 print("NONE TYPE ERROR")
-            # print(f"{u} has been made")
-        return sorted(username_urls)
+            
+        self.username_urls = sorted(username_urls)
+        self.users_data = users_data
+        return self.username_urls
     
     def usernames_to_file(self): #storing them to file to requste them after and fetch the users data
         print(f"is creating files by {self.username_urls} , {self.usernames}")
         set_to_file(self.project_name, self.username_urls)
+
+    def usernames_to_database(self):
+        print(f"is adding records to table by {self.username_urls} , {self.usernames}")
+        tablename = "users_to_scan"
+        add_to_sql(tablename, self.users_data)
+        pass
 

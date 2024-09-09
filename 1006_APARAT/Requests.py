@@ -21,9 +21,9 @@ def url_fndr(base_url, project_name, max_req):
     max_iterations = max_req
     add = os.path.join(directory , 'urls.txt')
     make_dir(directory)
-    with open(add, 'w') as f: #Every itteration of main.py it will be refresh to avoid some useless urls and repetitive urls
+    with open(add, 'w') as f: # In every itteration of main.py, it will be refreshed to avoid some useless urls and repetitive urls
         pass
-    make_file(directory, base_url)
+    make_file(directory, base_url) # First record in urls.txt is the seed url
     
     while iterations < max_iterations: #just a simple controller when it's supposed to not crawl whol page *** choosing more than 40 would be enough to ensure it's crwaling whole page
         try:
@@ -31,7 +31,7 @@ def url_fndr(base_url, project_name, max_req):
             data = r.json()
 
             if 'links' in data:
-                d = data['links']['next'] #until there is any new page it will achive next page url
+                d = data['links']['next'] # Until there is any new page it will achive next page url
             else:
                 print("no more links")
                 break
@@ -42,6 +42,6 @@ def url_fndr(base_url, project_name, max_req):
             iterations = iterations + 1
 
         except requests.RequestException as e:
-             print(f"An error occurred: {e}")
+             print(f"An error occurred. This related to next page: {e}")
              break
 

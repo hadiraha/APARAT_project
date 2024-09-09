@@ -6,10 +6,20 @@ from Mysql_connector import Mysqlconnector
 
 class ProfileFetcher: #Responsible for get user data and save it on sql
     counter = 0
-    def __init__(self, file):
+    def __init__(self, file = None, from_db = False):
         self.file = file
-        self.urls = self.read_file()
+        self.urls = self.read_from_db() if from_db else self.read_file()
         self.df = pd.DataFrame()
+
+    @classmethod
+    def read_from_db(cls):
+        c = Mysqlconnector()
+        query = f"SELECT username_url, last_seen FROM users_to_scan WHERE last_seen =0"
+        cursor = c.conf.cursor()
+        cursor.execute(query)
+        urls = [row[0] for row in cursor.fetchall()]
+        c.close_connection()
+        return sorted(urls)
 
     def read_file(self): #
         urls = set()
@@ -43,6 +53,7 @@ class ProfileFetcher: #Responsible for get user data and save it on sql
                             a += 1
                             self.counter += 1
                             print(f"{a} ________________ {self.counter}")
+                            self.update_lastseen(url)
                 except Exception as e:
                     print(f"Error: {e} From Fetching {url}")
         return self.show_counter()
@@ -77,7 +88,7 @@ class ProfileFetcher: #Responsible for get user data and save it on sql
     def pars_data_to_sql(self, data):
         if 'data' in data and 'attributes' in data['data']:
             dic_profile = data['data']['attributes']
-            tablename = 'fetched'
+            tablename = 'fetched3'
             c = Mysqlconnector()
             c.create_table(tablename, dic_profile)
             state = c.insert_value(tablename, dic_profile)
@@ -91,6 +102,15 @@ class ProfileFetcher: #Responsible for get user data and save it on sql
             dic_profile = data['data']['attributes']
             temp_df = pd.DataFrame([dic_profile])
             self.df = pd.concat([self.df, temp_df], ignore_index=True)
+
+    def update_lastseen(self, url):
+        c = Mysqlconnector()
+        query = "UPDATE users_to_scan SET last_seen = last_seen + 1 WHERE username_url = %s"
+        cursor = c.conf.cursor()
+        cursor.execute(query, (url,))
+        c.conf.commit()
+        cursor.close()
+        c.close_connection()
 
     def show_counter(self):
         print(f"{self.counter} is the total number of affected rows in DB")

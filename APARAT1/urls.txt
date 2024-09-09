@@ -2,3 +2,6 @@ https://www.aparat.com/api/fa/v1/video/video/list/tagid/1?next=1
 https://www.aparat.com/api/fa/v1/video/video/list/tagid/1?page=2
 https://www.aparat.com/api/fa/v1/video/video/list/tagid/1?page=3
 https://www.aparat.com/api/fa/v1/video/video/list/tagid/1?page=4
+https://www.aparat.com/api/fa/v1/video/video/list/tagid/1?page=5
+https://www.aparat.com/api/fa/v1/video/video/list/tagid/1?page=6
+https://www.aparat.com/api/fa/v1/video/video/list/tagid/1?page=7
